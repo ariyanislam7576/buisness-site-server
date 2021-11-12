@@ -24,7 +24,9 @@ async function run() {
     const database = client.db('products')
     const productsCollection = database.collection('productsCollection');
     const reviewCollecttion = database.collection('reviewCollecttion');
-    const orderCollection = database.collection('orderCollection')
+    const orderCollection = database.collection('orderCollection');
+    const userCollection = database.collection('userCollection')
+
 
 
     //get product api
@@ -87,22 +89,33 @@ async function run() {
       res.json(result)
     })
 
+    //put api
+    app.post('/user', async(req, res)=> {
+      const user = req.body;
+      console.log('post',user);
+      const result = await userCollection.insertOne(user)
+      res.json(result)     
+      console.log(result); 
+    })
+    
 
-    //delete api
+
+    //delete order api
     app.delete('/myorder/:id', async (req, res) => {
       const id = req.params.id
-      console.log(id);
       const query = { _id: ObjectId(id) }
       const result = await orderCollection.deleteOne(query)
       res.json(result)
   })
-  //   app.delete('/addproduct/:id', async (req, res) => {
-  //     const productid = req.params.productid
-  //     console.log(productid);
-  //     const query = { _id: ObjectId(productid) }
-  //     const result = await productsCollection.deleteOne(query)
-  //     res.json(result)
-  // })
+    //delete product api
+    app.delete('/addproduct/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await productsCollection.deleteOne(query)
+      console.log(result);
+      res.json(result)
+  })
+    
 
 
 
