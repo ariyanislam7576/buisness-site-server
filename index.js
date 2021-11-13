@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient } = require('mongodb');
+const { MongoClient, Admin } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors')
 require('dotenv').config()
@@ -64,6 +64,18 @@ async function run() {
       const result = await cursor.toArray()
       res.send(result)
     })
+
+    //get admin api
+    app.get('/user/:email', async(req, res)=> {
+      const email = req.params.email
+      const query = {email: email}
+      const user = await userCollection.findOne(query)
+      let isAdmin = false
+      if(user?.role === 'admin'){
+        isAdmin = true
+      }   
+      res.json({admin: isAdmin})
+     })
 
 
     //post product api
