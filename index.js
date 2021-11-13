@@ -89,16 +89,32 @@ async function run() {
       res.json(result)
     })
 
-    //put api
+    //post user api
     app.post('/user', async(req, res)=> {
       const user = req.body;
       console.log('post',user);
       const result = await userCollection.insertOne(user)
       res.json(result)     
-      console.log(result); 
     })
     
-
+    // put user api
+    app.put('/user',async(req, res)=> {
+      const user = req.body
+      const filter = {email: user.email}
+      const options = {upsert: true}
+      const updateDoc = {$set: user}
+      const result = await userCollection.updateOne(filter, updateDoc, options)
+      res.json(result)
+    })
+    app.put('/user/admin',async(req, res)=> {
+      const user = req.body
+      console.log('user post', user);
+      const filter = {email: user.email}
+      const updateDoc = {$set: {role: 'admin'}}
+      const result = await userCollection.updateOne(filter, updateDoc)
+      console.log(result);
+      res.json(result)
+    })
 
     //delete order api
     app.delete('/myorder/:id', async (req, res) => {
